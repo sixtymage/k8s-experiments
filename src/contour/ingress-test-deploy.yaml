@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-test
+  labels:
+    app.kubernetes.io/name:  ingress-test
+    app.kubernetes.io/instance:  ingress-test
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ingress-test-app
+  name: ingress-test
+  namespace: ingress-test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ingress-test-app
+  template:
+    metadata:
+      labels:
+        app: ingress-test-app
+    spec:
+      containers:
+      - name: ingress-test-container
+        image: ingress-test:0.0.9
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: ingress-test
+  namespace: ingress-test
+spec:
+  type: ClusterIP
+  selector: 
+    app: ingress-test-app
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata: 
+#   name: ingress-test-contour
+#   namespace: ingress-test
+# spec:
+#   ingressClassName: contour
+#   rules:
+#   - host: weather.localhost.ext
+#     http: 
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: ingress-test-svc
+#             port:
+#               number: 80

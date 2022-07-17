@@ -1,0 +1,13 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: ingress-test-ingress
+  namespace: ingress-test
+spec:
+  virtualhost:
+    fqdn: weather.localhost.ext
+  includes:
+    - name: ingress-test
+      namespace: ingress-test
+      conditions:
+        - prefix: /

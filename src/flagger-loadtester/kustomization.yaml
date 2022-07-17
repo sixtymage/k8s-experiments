@@ -1,0 +1,4 @@
+namespace: ingress-test
+resources:
+  - service.yaml
+  - deployment.yaml
